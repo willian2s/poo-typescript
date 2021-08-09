@@ -1,68 +1,19 @@
-export default class Character {
-  constructor(
-    private _name: string,
-    private _energy: number,
-    private _life: number,
-    private _attack: number,
-    private _defense: number
-  ) {}
+import { Util } from "../utils/Utils";
 
-  public get getName(): string {
-    return this._name;
-  }
+export abstract class Character {
+  protected _name: string;
+  protected _armor: number;
+  protected _maxLife: number;
+  protected _currentLife: number;
 
-  public set setName(name: string) {
+  constructor(name: string) {
     this._name = name;
+    this._armor = Util.randomize(100, 1_000);
+    this._maxLife = Util.randomize(100, 1_000);
+    this._currentLife = Util.randomize(40, this._maxLife);
   }
 
-  public showStatus(): string {
-    return (
-      "Warrior:" +
-      "\nName: " +
-      this._name +
-      "\nEnergy: " +
-      this._energy.toFixed(1) +
-      "\nAttack: " +
-      this._attack.toFixed(1) +
-      "\nDefense: " +
-      this._defense.toFixed(1)
-    );
-  }
+  public abstract attack(): string;
 
-  private randomize(factor: number): number {
-    return Math.random() * factor;
-  }
-
-  public trainAttack(): void {
-    this._attack += this.randomize(7);
-    this._energy -= this.randomize(10);
-    if (this._attack > 100) {
-      this._attack = 100;
-    }
-  }
-
-  public trainDefense(): void {
-    this._defense += this.randomize(5);
-    this._energy -= this.randomize(10);
-    if (this._defense > 100) {
-      this._defense = 100;
-    }
-  }
-
-  public rest(hours: number): void {
-    this._energy += hours + this.randomize(10);
-    if (this._energy > 100) {
-      this._energy = 100;
-    }
-  }
-
-  public battle(): number {
-    let wear: number = this.randomize(100);
-    this._energy -= wear;
-    return wear;
-  }
-
-  public isDead(): boolean {
-    return this._energy < 0;
-  }
+  public abstract defend(attacker: Character): string;
 }
